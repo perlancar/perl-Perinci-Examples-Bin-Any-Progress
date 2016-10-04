@@ -6,8 +6,11 @@ package Perinci::Examples::Bin::Any::Progress;
 use 5.010001;
 use strict;
 use warnings;
+use Log::Any '$log';
 
-our %SPEC:
+use Time::HiRes qw(sleep);
+
+our %SPEC;
 
 $SPEC{progress1} = {
     v => 1.1,
@@ -21,11 +24,13 @@ sub progress1 {
 
     my $progress = $args{-progress};
 
-    $progress->set(0) if $progress;
+    $progress->pos(0) if $progress;
+    $progress->target(10) if $progress;
     for (1..10) {
-        $log->info("") if $_ % 3 == 0;
+        $log->info("Log #$_") if $_ % 3 == 0;
         $progress->update(pos => $_, message => "Update #$_ ...")
             if $progress;
+        sleep 0.1;
     }
     $progress->finish if $progress;
 
